@@ -1,0 +1,13 @@
+{
+  "name": "gamifyportfolio",
+  "version": "1.0.0",
+  "description": "Interactive RPG-style developer portfolio built with Node.js and Express",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^5.0.0"
+  }
+}

@@ -1,0 +1,424 @@
+/* ============ GAME SCREEN ============ */
+#game-screen {
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+
+#stage {
+    position: relative;
+    width: min(96vw, 900px);
+    aspect-ratio: 780/340;
+    border: 6px solid var(--navy);
+    outline: 3px solid #8a8360;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .6);
+    background: #000;
+    overflow: hidden;
+}
+
+#world {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/images/world.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+}
+
+/* building name plaques */
+.plaque {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    font-family: var(--font-display);
+    font-size: 8px;
+    color: #fff;
+    background: var(--navy);
+    border: 2px solid #fff;
+    padding: 3px 5px;
+    white-space: nowrap;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, .5);
+    pointer-events: none;
+    letter-spacing: .5px;
+}
+
+.plaque.gym {
+    background: var(--red);
+}
+
+.plaque .arrow {
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #fff;
+}
+
+.hotspot-glow {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 70%);
+    animation: glow 1.6s ease-in-out infinite;
+    pointer-events: none;
+    opacity: 0;
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        opacity: .15;
+    }
+
+    50% {
+        opacity: .55;
+    }
+}
+/* ========================================
+   PLAYER ANCHOR
+======================================== */
+
+#player {
+    position: absolute;
+
+    /*
+        This point represents the
+        player's FEET.
+
+        The map position will never
+        change because of animation.
+    */
+
+    width: 1px;
+    height: 1px;
+
+    z-index: 9999;
+
+    transform: translate(-50%, -50%);
+
+    pointer-events: none;
+
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+
+/* ========================================
+   SPRITE
+======================================== */
+
+.player-sprite {
+
+    position: absolute;
+
+    /*
+        Original sprite frame:
+        68 × 72
+    */
+
+    width: 68px;
+    height: 72px;
+
+    /*
+        Put the bottom-center of the
+        sprite exactly on the player point.
+    */
+
+    left: -34px;
+    top: -72px;
+
+    background-image:
+        url("../assets/images/image.png");
+
+    background-repeat: no-repeat;
+
+    background-size:
+        272px 288px;
+
+    background-position:
+        0 0;
+
+    image-rendering: pixelated;
+
+    overflow: hidden;
+}
+
+
+/* ========================================
+   IDLE
+======================================== */
+
+/* DOWN */
+
+#player.face-down .player-sprite {
+    background-position: 0 0;
+}
+
+
+/* LEFT */
+
+#player.face-left .player-sprite {
+    background-position: 0 -72px;
+}
+
+
+/* RIGHT */
+
+#player.face-right .player-sprite {
+    background-position: 0 -144px;
+}
+
+
+/* UP */
+
+#player.face-up .player-sprite {
+    background-position: 0 -216px;
+}
+
+
+/* ========================================
+   WALKING
+======================================== */
+
+#player.walking.face-down .player-sprite {
+
+    animation:
+        walkDown 0.38s steps(4) infinite;
+
+}
+
+
+#player.walking.face-left .player-sprite {
+
+    animation:
+        walkLeft 0.38s steps(4) infinite;
+
+}
+
+
+#player.walking.face-right .player-sprite {
+
+    animation:
+        walkRight 0.38s steps(4) infinite;
+
+}
+
+
+#player.walking.face-up .player-sprite {
+
+    animation:
+        walkUp 0.38s steps(4) infinite;
+
+}
+
+
+/* ========================================
+   DOWN WALK
+======================================== */
+
+@keyframes walkDown {
+
+    0% {
+        background-position: 0 0;
+    }
+
+    25% {
+        background-position: -68px 0;
+    }
+
+    50% {
+        background-position: -136px 0;
+    }
+
+    75% {
+        background-position: -204px 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+
+}
+
+
+/* ========================================
+   LEFT WALK
+======================================== */
+
+@keyframes walkLeft {
+
+    0% {
+        background-position: 0 -72px;
+    }
+
+    25% {
+        background-position: -68px -72px;
+    }
+
+    50% {
+        background-position: -136px -72px;
+    }
+
+    75% {
+        background-position: -204px -72px;
+    }
+
+    100% {
+        background-position: 0 -72px;
+    }
+
+}
+
+
+/* ========================================
+   RIGHT WALK
+======================================== */
+
+@keyframes walkRight {
+
+    0% {
+        background-position: 0 -144px;
+    }
+
+    25% {
+        background-position: -68px -144px;
+    }
+
+    50% {
+        background-position: -136px -144px;
+    }
+
+    75% {
+        background-position: -204px -144px;
+    }
+
+    100% {
+        background-position: 0 -144px;
+    }
+
+}
+
+
+/* ========================================
+   UP WALK
+======================================== */
+
+@keyframes walkUp {
+
+    0% {
+        background-position: 0 -216px;
+    }
+
+    25% {
+        background-position: -68px -216px;
+    }
+
+    50% {
+        background-position: -136px -216px;
+    }
+
+    75% {
+        background-position: -204px -216px;
+    }
+
+    100% {
+        background-position: 0 -216px;
+    }
+
+}
+
+
+/* ========================================
+   SHADOW
+======================================== */
+
+#player .shadow {
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 34px;
+    height: 9px;
+
+    transform:
+        translate(-50%, -2px);
+
+    background:
+        rgba(0, 0, 0, 0.4);
+
+    border-radius: 50%;
+
+    z-index: -1;
+}
+/* HUD */
+#hud-top {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 40;
+    pointer-events: none;
+}
+
+#hud-name {
+    font-family: var(--font-display);
+    font-size: 9px;
+    color: #fff;
+    background: rgba(27, 36, 64, .85);
+    border: 2px solid #fff;
+    padding: 6px 8px;
+    line-height: 1.7;
+    pointer-events: auto;
+}
+
+#hud-name .badge {
+    color: var(--gold);
+}
+
+#menu-btn {
+    font-family: var(--font-display);
+    font-size: 9px;
+    color: var(--navy);
+    background: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 7px 10px;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, .4);
+}
+
+#menu-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, .4);
+}
+
+#hint-banner {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: #fff;
+    background: rgba(27, 36, 64, .85);
+    border: 2px solid #fff;
+    padding: 4px 12px;
+    z-index: 39;
+    pointer-events: none;
+    text-align: center;
+    transition: opacity .5s;
+}

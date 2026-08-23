@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Sahil Pathak | Portfolio Quest</title>
+
+
+    <!-- =========================================
+         MAIN CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="./css/main.css"
+    >
+
+</head>
+
+
+<body>
+
+<div id="app">
+
+
+    <!-- =========================================
+         BOOT SCREEN
+    ========================================== -->
+
+    <section id="boot-screen">
+
+        <div class="badge-row">
+
+            <span>🌿</span>
+            <span>🏆</span>
+            <span>🌿</span>
+
+        </div>
+
+
+        <h1 id="boot-title">
+            PORTFOLIO<br>
+            QUEST
+        </h1>
+
+
+        <div
+            class="sub"
+            id="boot-sub"
+        >
+            Walk around town, explore what I've built,
+            and challenge the Gym for my résumé.
+        </div>
+
+
+        <div class="press">
+            PRESS START
+        </div>
+
+
+        <div class="credit">
+            Arrow keys / WASD to move once you're in.
+            Tap anywhere to begin.
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         GAME SCREEN
+    ========================================== -->
+
+    <main id="game-screen">
+
+
+        <!-- =====================================
+             GAME STAGE
+        ====================================== -->
+
+        <div id="stage">
+
+
+            <!-- =================================
+                 WORLD
+            ================================== -->
+
+            <div id="world">
+
+
+                <!-- =============================
+                     PLAYER
+                ============================== -->
+
+<div id="player">
+
+    <div class="player-sprite"></div>
+
+    <div class="shadow"></div>
+
+</div>
+
+
+
+            <!-- =================================
+                 TOP HUD
+            ================================== -->
+
+            <div id="hud-top">
+
+
+                <!-- PLAYER NAME -->
+
+                <div id="hud-name">
+
+                    <div>
+                        Your Name
+                    </div>
+
+                    <strong>
+                        Software Developer
+                    </strong>
+
+                </div>
+
+
+               <div id="menu-overlay">
+
+    <div id="menu-panel">
+
+        <!-- HEADER -->
+        <div class="menu-header">
+
+            <div>
+                <div class="menu-label">
+                    PORTFOLIO QUEST
+                </div>
+
+                <h2>MENU</h2>
+            </div>
+
+            <button
+                id="menu-close"
+                class="menu-close"
+            >
+                X
+            </button>
+
+        </div>
+
+
+        <!-- PLAYER INFO -->
+        <div class="menu-profile">
+
+            <div class="menu-avatar">
+                <div class="menu-avatar-sprite"></div>
+            </div>
+
+            <div class="menu-player-info">
+
+                <h3>Sahil Pathak</h3>
+
+                <p>
+                    Software Developer
+                </p>
+
+                <div class="menu-status">
+                    <span class="status-dot"></span>
+                    EXPLORING TOWN
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MENU OPTIONS -->
+        <div class="menu-options">
+
+            <button
+                class="menu-option"
+                data-action="about"
+            >
+
+                <span class="menu-option-icon">
+                    👤
+                </span>
+
+                <span class="menu-option-text">
+
+                    <strong>
+                        ABOUT ME
+                    </strong>
+
+                    <small>
+                        Learn about me
+                    </small>
+
+                </span>
+
+                <span class="menu-arrow">
+                    >
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-option"
+                data-action="projects"
+            >
+
+                <span class="menu-option-icon">
+                    💻
+                </span>
+
+                <span class="menu-option-text">
+
+                    <strong>
+                        PROJECTS
+                    </strong>
+
+                    <small>
+                        Explore my work
+                    </small>
+
+                </span>
+
+                <span class="menu-arrow">
+                    >
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-option"
+                data-action="resume"
+            >
+
+                <span class="menu-option-icon">
+                    📄
+                </span>
+
+                <span class="menu-option-text">
+
+                    <strong>
+                        RESUME
+                    </strong>
+
+                    <small>
+                        View my experience
+                    </small>
+
+                </span>
+
+                <span class="menu-arrow">
+                    >
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-option"
+                data-action="contact"
+            >
+
+                <span class="menu-option-icon">
+                    ✉
+                </span>
+
+                <span class="menu-option-text">
+
+                    <strong>
+                        CONTACT
+                    </strong>
+
+                    <small>
+                        Let's connect
+                    </small>
+
+                </span>
+
+                <span class="menu-arrow">
+                    >
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- FOOTER -->
+        <div class="menu-footer">
+
+            <button
+                id="menu-resume-button"
+                class="menu-footer-button"
+            >
+                📄 VIEW RESUME
+            </button>
+
+            <button
+                id="menu-return"
+                class="menu-footer-button menu-primary"
+            >
+                ▶ RETURN TO GAME
+            </button>
+
+        </div>
+
+
+        <div class="menu-help">
+            ESC &nbsp; CLOSE MENU
+        </div>
+
+    </div>
+
+</div>
+
+
+
+            <!-- =================================
+                 HINT BANNER
+            ================================== -->
+
+            <div id="hint-banner"></div>
+
+
+
+            <!-- =================================
+                 MOBILE CONTROLS
+            ================================== -->
+
+            <div id="controls">
+
+
+                <div id="dpad">
+
+
+                    <button
+                        class="dpad-btn up"
+                        data-dir="up"
+                        type="button"
+                    >
+                        ▲
+                    </button>
+
+
+                    <button
+                        class="dpad-btn left"
+                        data-dir="left"
+                        type="button"
+                    >
+                        ◀
+                    </button>
+
+
+                    <div class="dpad-btn mid"></div>
+
+
+                    <button
+                        class="dpad-btn right"
+                        data-dir="right"
+                        type="button"
+                    >
+                        ▶
+                    </button>
+
+
+                    <button
+                        class="dpad-btn down"
+                        data-dir="down"
+                        type="button"
+                    >
+                        ▼
+                    </button>
+
+
+                </div>
+
+
+                <button
+                    id="a-btn"
+                    type="button"
+                >
+                    A
+                </button>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 FOOTER CONTROL HINT
+            ================================== -->
+
+            <div id="foot-hint">
+
+                ARROW KEYS / WASD to move
+                &nbsp;•&nbsp;
+                walk into a building to enter
+                &nbsp;•&nbsp;
+                M for menu
+
+            </div>
+
+
+
+            <!-- =================================
+                 DIALOG
+            ================================== -->
+
+            <div id="dialog-wrap">
+
+
+                <div id="dialog-box">
+
+
+                    <button
+                        id="dialog-close"
+                        type="button"
+                    >
+                        ✕
+                    </button>
+
+
+                    <div id="dialog-title"></div>
+
+
+                    <div id="dialog-body"></div>
+
+
+                    <div id="dialog-actions"></div>
+
+
+                </div>
+
+
+            </div>
+
+
+<!-- MENU BUTTON -->
+<button id="menu-button" type="button">
+    ☰ MENU
+</button>
+
+
+<!-- MENU OVERLAY -->
+<div id="menu-overlay">
+
+    <div id="menu-panel">
+
+        <div class="menu-header">
+
+            <div>
+                <small>PORTFOLIO QUEST</small>
+                <h2>MENU</h2>
+            </div>
+
+            <button
+                id="menu-close"
+                type="button"
+            >
+                X
+            </button>
+
+        </div>
+
+
+        <div class="menu-options">
+
+            <button
+                class="menu-option"
+                data-action="about"
+                type="button"
+            >
+                👤 ABOUT ME
+            </button>
+
+            <button
+                class="menu-option"
+                data-action="projects"
+                type="button"
+            >
+                💻 PROJECTS
+            </button>
+
+            <button
+                class="menu-option"
+                data-action="resume"
+                type="button"
+            >
+                📄 RESUME
+            </button>
+
+            <button
+                class="menu-option"
+                data-action="contact"
+                type="button"
+            >
+                ✉ CONTACT
+            </button>
+
+        </div>
+
+
+        <button
+            id="menu-return"
+            type="button"
+        >
+            ▶ RETURN TO GAME
+        </button>
+
+    </div>
+
+</div>
+
+            <!-- =================================
+                 BATTLE SCREEN
+            ================================== -->
+
+            <div id="battle-screen">
+
+
+                <div id="battle-field">
+
+
+                    <!-- =========================
+                         OPPONENT
+                    ========================== -->
+
+                    <div id="opp-platform"></div>
+
+
+                    <div
+                        class="combatant"
+                        id="opp-sprite"
+                    >
+                        🕴️
+                    </div>
+
+
+                    <div
+                        class="hp-panel"
+                        id="opp-hp-panel"
+                    >
+
+                        <div class="hp-name">
+
+                            <span id="opp-name">
+                                OPPONENT
+                            </span>
+
+                            <span>
+                                Lv.99
+                            </span>
+
+                        </div>
+
+
+                        <div class="hp-bar-bg">
+
+                            <div
+                                class="hp-bar-fill"
+                                id="opp-hp-fill"
+                                style="width:100%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         PLAYER
+                    ========================== -->
+
+                    <div id="ply-platform"></div>
+
+
+                    <div
+                        class="combatant"
+                        id="ply-sprite"
+                    >
+                        🧑‍💻
+                    </div>
+
+
+                    <div
+                        class="hp-panel"
+                        id="ply-hp-panel"
+                    >
+
+                        <div class="hp-name">
+
+                            <span>
+                                YOU
+                            </span>
+
+                            <span>
+                                Lv.99
+                            </span>
+
+                        </div>
+
+
+                        <div class="hp-bar-bg">
+
+                            <div
+                                class="hp-bar-fill"
+                                id="ply-hp-fill"
+                                style="width:100%"
+                            ></div>
+
+                        </div>
+
+
+                        <div id="ply-hp-num">
+                            100/100 CONFIDENCE
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         BATTLE MESSAGE
+                    ========================== -->
+
+                    <div id="battle-msg">
+                        A battle is about to begin!
+                    </div>
+
+
+
+                    <!-- =========================
+                         BATTLE ACTIONS
+                    ========================== -->
+
+                    <div id="battle-actions"></div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 RESUME
+            ================================== -->
+
+            <div id="resume-overlay">
+
+
+                <div id="resume-panel">
+
+
+                    <div id="resume-inner"></div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ==================================================
+     JAVASCRIPT
+=================================================== -->
+
+
+<!-- CONFIG -->
+
+<script src="./js/config.js"></script>
+
+
+<!-- UTILITIES -->
+
+<script src="./js/utils/dom.js"></script>
+
+<script src="./js/utils/audio.js"></script>
+
+<script src="./js/utils/helpers.js"></script>
+
+
+<!-- GAME -->
+
+<script src="./js/game/game.js"></script>
+
+<script src="./js/game/player.js"></script>
+
+<script src="./js/game/collision.js"></script>
+
+<script src="./js/game/movement.js"></script>
+
+<script src="./js/game/interaction.js"></script>
+
+
+<!-- SCREENS -->
+
+<script src="./js/screens/dialog.js"></script>
+
+<script src="./js/screens/menu.js"></script>
+
+<script src="./js/screens/world.js"></script>
+
+<script src="./js/screens/battle.js"></script>
+
+<script src="./js/screens/resume.js"></script>
+
+<script src="./js/screens/boot.js"></script>
+
+
+<!-- APP -->
+
+<script src="./js/app.js"></script>
+
+
+</body>
+
+</html>

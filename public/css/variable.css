@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+:root{
+  --navy:#1b2440;
+  --navy-light:#2f3c66;
+  --panel:#f8f6ec;
+  --panel-edge:#c9c2a3;
+  --ink:#1b2440;
+  --red:#e0474a;
+  --red-dark:#a8302f;
+  --gold:#f4c542;
+  --gold-dark:#c99420;
+  --grass:#3fa15a;
+  --path:#d8c68a;
+  --hp-green:#7ac74c;
+  --hp-yellow:#f0d030;
+  --hp-red:#e0474a;
+  --blue:#3f7fd8;
+  --font-display:'Press Start 2P', monospace;
+  --font-body:'VT323', monospace;
+}
+
+*{box-sizing:border-box;}
+html,body{
+  margin:0; padding:0; height:100%;
+  background:#0d1220;
+  font-family:var(--font-body);
+  color:var(--ink);
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+
+#app{
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
