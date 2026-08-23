@@ -13,20 +13,49 @@ const player = {
 
 let lastDirState = null;
 let lastMovingState = null;
+let lastFrameIndex = null;
+
+// ========================================
+// SPRITE SHEET LAYOUT (image.png — 4x4 grid, 68x72px per frame)
+// Row 0 = down, Row 1 = left, Row 2 = right, Row 3 = up
+// Column 0 = standing/idle, columns 1-3 = walk cycle
+// ========================================
+
+const FRAME_W = 68;
+const FRAME_H = 72;
+const FRAME_DURATION_MS = 120; // lower = faster walk animation
+
+const SPRITE_ROWS = {
+    down: 0,
+    left: 1,
+    right: 2,
+    up: 3
+};
 
 // ========================================
 // SPRITE UPDATE (Change-Detector to eliminate shaking)
 // ========================================
 
 function updateSprite() {
+    const img = document.getElementById("player-img");
     const el = document.getElementById("player");
-    if (!el) return;
+    if (!img || !el) return;
 
-    if (player.dir !== lastDirState || player.moving !== lastMovingState) {
+    const row = SPRITE_ROWS[player.dir] ?? SPRITE_ROWS.down;
+    const col = player.moving
+        ? Math.floor(performance.now() / FRAME_DURATION_MS) % 4
+        : 0; // snap to standing frame when idle
+
+    if (
+        player.dir !== lastDirState ||
+        player.moving !== lastMovingState ||
+        col !== lastFrameIndex
+    ) {
         lastDirState = player.dir;
         lastMovingState = player.moving;
+        lastFrameIndex = col;
 
-        el.classList.toggle("face-left", player.dir === "left");
+        img.style.transform = `translate(${-col * FRAME_W}px, ${-row * FRAME_H}px)`;
         el.classList.toggle("walking", player.moving);
     }
 }
