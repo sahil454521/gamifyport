@@ -1,5 +1,5 @@
 // ========================================
-// POKEMON STYLE MOVEMENT
+// POKÉMON RPG FLUID MOVEMENT SYSTEM
 // ========================================
 
 const keys = {
@@ -9,382 +9,191 @@ const keys = {
     right: false
 };
 
+const MOVE_SPEED = 115; // logical units per second
 
 // ========================================
-// MOVEMENT SETTINGS
-// ========================================
-
-// Distance moved per step
-const STEP_SIZE = 32;
-
-// Time for one step
-const STEP_TIME = 120;
-
-// Prevent movement from becoming too fast
-let movementLocked = false;
-
-
-// ========================================
-// KEY DOWN
+// KEY LISTENERS
 // ========================================
 
 window.addEventListener("keydown", (event) => {
-
     const key = event.key.toLowerCase();
 
-    if (
-        key === "w" ||
-        key === "arrowup"
-    ) {
-
+    if (key === "w" || key === "arrowup") {
         keys.up = true;
-
-        event.preventDefault();
+        if (event.target.tagName !== "INPUT" && event.target.tagName !== "TEXTAREA") {
+            event.preventDefault();
+        }
     }
-
-
-    if (
-        key === "s" ||
-        key === "arrowdown"
-    ) {
-
+    if (key === "s" || key === "arrowdown") {
         keys.down = true;
-
-        event.preventDefault();
+        if (event.target.tagName !== "INPUT" && event.target.tagName !== "TEXTAREA") {
+            event.preventDefault();
+        }
     }
-
-
-    if (
-        key === "a" ||
-        key === "arrowleft"
-    ) {
-
+    if (key === "a" || key === "arrowleft") {
         keys.left = true;
-
-        event.preventDefault();
+        if (event.target.tagName !== "INPUT" && event.target.tagName !== "TEXTAREA") {
+            event.preventDefault();
+        }
     }
-
-
-    if (
-        key === "d" ||
-        key === "arrowright"
-    ) {
-
+    if (key === "d" || key === "arrowright") {
         keys.right = true;
-
-        event.preventDefault();
+        if (event.target.tagName !== "INPUT" && event.target.tagName !== "TEXTAREA") {
+            event.preventDefault();
+        }
     }
 
+    if (key === "m") {
+        if (typeof toggleMenu === "function") toggleMenu();
+    }
+    if (key === "escape") {
+        if (typeof closeDialog === "function") closeDialog();
+        if (typeof closeMenu === "function") closeMenu();
+        if (typeof closeResume === "function") closeResume();
+    }
 });
-
-
-// ========================================
-// KEY UP
-// ========================================
 
 window.addEventListener("keyup", (event) => {
-
     const key = event.key.toLowerCase();
 
-
-    if (
-        key === "w" ||
-        key === "arrowup"
-    ) {
-
-        keys.up = false;
-    }
-
-
-    if (
-        key === "s" ||
-        key === "arrowdown"
-    ) {
-
-        keys.down = false;
-    }
-
-
-    if (
-        key === "a" ||
-        key === "arrowleft"
-    ) {
-
-        keys.left = false;
-    }
-
-
-    if (
-        key === "d" ||
-        key === "arrowright"
-    ) {
-
-        keys.right = false;
-    }
-
+    if (key === "w" || key === "arrowup") keys.up = false;
+    if (key === "s" || key === "arrowdown") keys.down = false;
+    if (key === "a" || key === "arrowleft") keys.left = false;
+    if (key === "d" || key === "arrowright") keys.right = false;
 });
 
+// Clear keys when tab/window loses focus
+window.addEventListener("blur", () => {
+    keys.up = false;
+    keys.down = false;
+    keys.left = false;
+    keys.right = false;
+    player.moving = false;
+    updateSprite();
+});
 
 // ========================================
-// CHECK WHICH DIRECTION IS PRESSED
+// MOBILE TOUCH / DPAD BINDINGS
 // ========================================
 
-function getDirection() {
+function bindMobileControls() {
+    document.querySelectorAll(".dpad-btn[data-dir]").forEach((btn) => {
+        const dir = btn.dataset.dir;
+        const start = (e) => {
+            e.preventDefault();
+            keys[dir] = true;
+        };
+        const end = (e) => {
+            e.preventDefault();
+            keys[dir] = false;
+        };
 
-    /*
-        Only ONE direction at a time.
+        btn.addEventListener("touchstart", start, { passive: false });
+        btn.addEventListener("touchend", end, { passive: false });
+        btn.addEventListener("mousedown", start);
+        btn.addEventListener("mouseup", end);
+        btn.addEventListener("mouseleave", end);
+    });
 
-        This prevents diagonal movement.
-    */
-
-    if (keys.up) {
-        return "up";
+    const aBtn = document.getElementById("a-btn");
+    if (aBtn) {
+        aBtn.addEventListener("click", () => {
+            if (dialogOpen) {
+                if (typeof closeDialog === "function") closeDialog();
+            } else {
+                const foot = footRect(player.x, player.y);
+                if (Array.isArray(BUILDINGS)) {
+                    for (const b of BUILDINGS) {
+                        const centerX = b.rect.x + b.rect.w / 2;
+                        const centerY = b.rect.y + b.rect.h / 2;
+                        const dx = player.x - centerX;
+                        const dy = player.y - centerY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < INTERACTION_DISTANCE + Math.max(b.rect.w, b.rect.h) / 2) {
+                            enterBuilding(b);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
     }
-
-    if (keys.down) {
-        return "down";
-    }
-
-    if (keys.left) {
-        return "left";
-    }
-
-    if (keys.right) {
-        return "right";
-    }
-
-    return null;
 }
 
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindMobileControls);
+} else {
+    bindMobileControls();
+}
 
 // ========================================
-// MOVE ONE STEP
+// MOVEMENT UPDATE (Delta-time based)
 // ========================================
 
-function moveOneStep(direction) {
-
-    if (movementLocked) {
+function updateMovement(dt) {
+    if (dialogOpen || menuOpen || battleOpen || resumeOpen) {
+        player.moving = false;
+        updateSprite();
         return;
     }
-
-
-    movementLocked = true;
-
-
-    // ------------------------------------
-    // Direction
-    // ------------------------------------
 
     let dx = 0;
     let dy = 0;
 
+    if (keys.up) dy -= 1;
+    if (keys.down) dy += 1;
+    if (keys.left) dx -= 1;
+    if (keys.right) dx += 1;
 
-    if (direction === "up") {
+    player.moving = dx !== 0 || dy !== 0;
 
-        dy = -STEP_SIZE;
-
-        player.dir = "up";
+    // Normalize diagonal movement speed
+    if (dx !== 0 && dy !== 0) {
+        dx *= 0.7071;
+        dy *= 0.7071;
     }
 
+    // Direction facing
+    if (dx > 0) player.dir = "right";
+    else if (dx < 0) player.dir = "left";
+    else if (dy > 0) player.dir = "down";
+    else if (dy < 0) player.dir = "up";
 
-    if (direction === "down") {
+    const moveStep = MOVE_SPEED * dt;
+    const nextX = player.x + dx * moveStep;
+    const nextY = player.y + dy * moveStep;
 
-        dy = STEP_SIZE;
-
-        player.dir = "down";
+    // Independent axis collision checking for smooth wall-sliding
+    if (!blockedAt(nextX, player.y)) {
+        player.x = nextX;
+    }
+    if (!blockedAt(player.x, nextY)) {
+        player.y = nextY;
     }
 
-
-    if (direction === "left") {
-
-        dx = -STEP_SIZE;
-
-        player.dir = "left";
+    // Check doors and building proximity
+    if (typeof tryTriggerDoor === "function") {
+        tryTriggerDoor();
     }
 
-
-    if (direction === "right") {
-
-        dx = STEP_SIZE;
-
-        player.dir = "right";
-    }
-
-
-    // ------------------------------------
-    // Walking animation
-    // ------------------------------------
-
-    player.moving = true;
-
-    updateSprite();
-
-
-    // ------------------------------------
-    // Calculate destination
-    // ------------------------------------
-
-    const targetX =
-        player.x + dx;
-
-    const targetY =
-        player.y + dy;
-
-
-    // ------------------------------------
-    // World boundaries
-    // ------------------------------------
-
-    const insideWorld =
-
-        targetX >= 15 &&
-
-        targetX <= WORLD_W - 15 &&
-
-        targetY >= 15 &&
-
-        targetY <= WORLD_H - 15;
-
-
-    if (!insideWorld) {
-
-        player.moving = false;
-
-        updateSprite();
-
-        movementLocked = false;
-
-        return;
-    }
-
-
-    // ------------------------------------
-    // Move smoothly to next tile
-    // ------------------------------------
-
-    const startX = player.x;
-    const startY = player.y;
-
-    const startTime = performance.now();
-
-
-    function animateStep(now) {
-
-        const elapsed =
-            now - startTime;
-
-
-        const progress =
-            Math.min(
-                elapsed / STEP_TIME,
-                1
-            );
-
-
-        /*
-            Smoothstep gives the movement
-            a small RPG-style acceleration.
-        */
-
-        const eased =
-            progress *
-            progress *
-            (3 - 2 * progress);
-
-
-        player.x =
-            startX +
-            (targetX - startX) *
-            eased;
-
-
-        player.y =
-            startY +
-            (targetY - startY) *
-            eased;
-
-
-        render();
-
-
-        if (progress < 1) {
-
-            requestAnimationFrame(
-                animateStep
-            );
-
-            return;
-        }
-
-
-        // --------------------------------
-        // Snap exactly onto tile
-        // --------------------------------
-
-        player.x = targetX;
-        player.y = targetY;
-
-
-        player.moving = false;
-
-        updateSprite();
-
-        render();
-
-
-        movementLocked = false;
-
-
-        /*
-            If the key is STILL being held,
-            immediately take another step.
-        */
-
-        const nextDirection =
-            getDirection();
-
-
-        if (nextDirection) {
-
-            moveOneStep(
-                nextDirection
-            );
-
-        }
-
-    }
-
-
-    requestAnimationFrame(
-        animateStep
-    );
+    render();
 }
 
-
 // ========================================
-// MOVEMENT LOOP
+// MAIN GAME LOOP
 // ========================================
 
-function updateMovement() {
-
-    if (movementLocked) {
-        return;
+function loop(timestamp) {
+    if (lastTime === null) {
+        lastTime = timestamp;
     }
 
+    const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+    lastTime = timestamp;
 
-    const direction =
-        getDirection();
+    updateMovement(dt);
 
-
-    if (!direction) {
-
-        player.moving = false;
-
-        updateSprite();
-
-        return;
-    }
-
-
-    moveOneStep(direction);
+    requestAnimationFrame(loop);
 }
+
+console.log("✅ movement.js loaded");

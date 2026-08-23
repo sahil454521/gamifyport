@@ -1,162 +1,52 @@
 // ========================================
-// PLAYER
+// PLAYER STATE & SPRITE RENDERING
 // ========================================
-function updateMovement() {
 
-    if (menuOpen) {
-
-        player.moving = false;
-
-        updateSprite();
-
-        return;
-    }}
-
-    // existing movement code...
 const player = {
-
-    x: 390,
-    y: 150,
-
+    x: 240, // Spawn in wide-open central crossroads plaza
+    y: 140,
     w: 34,
     h: 40,
-
     dir: "down",
-
     moving: false
 };
 
+let lastDirState = null;
+let lastMovingState = null;
 
 // ========================================
-// PLAYER ELEMENT
-// ========================================
-
-const playerEl =
-    document.getElementById("player");
-
-
-// ========================================
-// CHECK PLAYER
-// ========================================
-
-if (!playerEl) {
-
-    console.error(
-        "❌ Player element #player was not found!"
-    );
-
-} else {
-
-    console.log(
-        "✅ Player element found"
-    );
-
-}
-
-
-// ========================================
-// SPRITE
+// SPRITE UPDATE (Change-Detector to eliminate shaking)
 // ========================================
 
 function updateSprite() {
+    const el = document.getElementById("player");
+    if (!el) return;
 
-    if (!playerEl) {
-        return;
+    if (player.dir !== lastDirState || player.moving !== lastMovingState) {
+        lastDirState = player.dir;
+        lastMovingState = player.moving;
+
+        el.classList.toggle("face-left", player.dir === "left");
+        el.classList.toggle("walking", player.moving);
     }
-
-
-    playerEl.classList.remove(
-        "face-down",
-        "face-left",
-        "face-right",
-        "face-up"
-    );
-
-
-    if (player.dir === "left") {
-
-        playerEl.classList.add(
-            "face-left"
-        );
-
-    }
-
-    else if (player.dir === "right") {
-
-        playerEl.classList.add(
-            "face-right"
-        );
-
-    }
-
-    else if (player.dir === "up") {
-
-        playerEl.classList.add(
-            "face-up"
-        );
-
-    }
-
-    else {
-
-        playerEl.classList.add(
-            "face-down"
-        );
-
-    }
-
-
-    playerEl.classList.toggle(
-        "walking",
-        player.moving
-    );
 }
+
 // ========================================
-// RENDER
+// RENDER PLAYER POSITION
 // ========================================
 
 function render() {
+    const el = document.getElementById("player");
+    if (!el) return;
 
-    if (!playerEl) {
-        return;
-    }
+    // Use fixed precision to eliminate subpixel rounding jitter
+    const xPct = (player.x / WORLD_W) * 100;
+    const yPct = (player.y / WORLD_H) * 100;
 
-    const x =
-        (player.x / WORLD_W) * 100;
-
-    const y =
-        (player.y / WORLD_H) * 100;
-
-    playerEl.style.left =
-        `${x}%`;
-
-    playerEl.style.top =
-        `${y}%`;
+    el.style.left = `${xPct.toFixed(2)}%`;
+    el.style.top = `${yPct.toFixed(2)}%`;
 
     updateSprite();
 }
 
-// ========================================
-// GAME LOOP
-// ========================================
-
-function loop(timestamp) {
-
-    if (lastTime === null) {
-        lastTime = timestamp;
-    }
-
-    lastTime = timestamp;
-
-
-    // Check keyboard
-    updateMovement();
-    checkBuildingInteraction();
-
-
-    // Draw player
-    render();
-
-
-    requestAnimationFrame(loop);
-}
+console.log("✅ player.js loaded");

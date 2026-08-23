@@ -1,4 +1,18 @@
+// ========================================
+// DOM UTILITIES
+// ========================================
+
 window.$ = (selector) => document.querySelector(selector);
 window.$$ = (selector) => [...document.querySelectorAll(selector)];
-window.worldEl = document.querySelector("#world");
-window.playerEl = document.querySelector("#player");
+
+Object.defineProperty(window, "worldEl", {
+    get: () => document.getElementById("world"),
+    configurable: true
+});
+
+Object.defineProperty(window, "playerEl", {
+    get: () => document.getElementById("player"),
+    configurable: true
+});
+
+console.log("✅ dom.js loaded");

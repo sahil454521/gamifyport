@@ -2,109 +2,73 @@
 // COLLISION SYSTEM
 // ========================================
 
-
-// Player collision offsets
 const PLAYER_TOP_OFFSET = 40 * 0.78;
 const PLAYER_BOTTOM_OFFSET = 40 * 0.22;
 
-
 // ========================================
-// RECTANGLE COLLISION
+// RECTANGLE COLLISION HELPER
 // ========================================
 
 function rectsOverlap(a, b) {
-
-  return (
-    a.x < b.x + b.w &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.h &&
-    a.y + a.h > b.y
-  );
+    if (!a || !b) return false;
+    return (
+        a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y
+    );
 }
 
-
 // ========================================
-// PLAYER FOOT RECTANGLE
+// PLAYER FOOT RECTANGLE (compact foot bounding box)
 // ========================================
 
-function footRect(x, y) {
-
-  return {
-    x: x - 10,
-    y: y - 4,
-    w: 20,
-    h: 14
-  };
+function footRect(px, py) {
+    return {
+        x: px - 8,
+        y: py - 2,
+        w: 16,
+        h: 8
+    };
 }
-
 
 // ========================================
 // CHECK IF POSITION IS BLOCKED
 // ========================================
 
-function blockedAt(x, y) {
+function blockedAt(px, py) {
+    const foot = footRect(px, py);
 
-  const foot = footRect(x, y);
-
-
-  // ------------------------------------
-  // World boundaries
-  // ------------------------------------
-
-  if (
-    x - player.w / 2 < 4 ||
-    x + player.w / 2 > WORLD_W - 4
-  ) {
-    return true;
-  }
-
-
-  if (
-    y - PLAYER_TOP_OFFSET < 2 ||
-    y + PLAYER_BOTTOM_OFFSET > WORLD_H - 2
-  ) {
-    return true;
-  }
-
-
-  // ------------------------------------
-  // Buildings
-  // ------------------------------------
-
-  for (const building of BUILDINGS) {
-
-    // Some buildings don't block movement
-    if (building.noBlock) {
-      continue;
-    }
-
+    // 1. World boundaries
     if (
-      rectsOverlap(
-        foot,
-        building.rect
-      )
+        px - player.w / 2 < 4 ||
+        px + player.w / 2 > WORLD_W - 4 ||
+        py - PLAYER_TOP_OFFSET < 2 ||
+        py + PLAYER_BOTTOM_OFFSET > WORLD_H - 2
     ) {
-      return true;
+        return true;
     }
-  }
 
-
-  // ------------------------------------
-  // Natural obstacles
-  // ------------------------------------
-
-  for (const obstacle of OBSTACLES) {
-
-    if (
-      rectsOverlap(
-        foot,
-        obstacle
-      )
-    ) {
-      return true;
+    // 2. Buildings
+    if (Array.isArray(BUILDINGS)) {
+        for (const b of BUILDINGS) {
+            if (b.noBlock) continue;
+            if (b.rect && rectsOverlap(foot, b.rect)) {
+                return true;
+            }
+        }
     }
-  }
 
+    // 3. Natural obstacles
+    if (Array.isArray(OBSTACLES)) {
+        for (const o of OBSTACLES) {
+            if (rectsOverlap(foot, o)) {
+                return true;
+            }
+        }
+    }
 
-  return false;
+    return false;
 }
+
+console.log("✅ collision.js loaded");
