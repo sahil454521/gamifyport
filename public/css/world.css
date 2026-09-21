@@ -150,6 +150,7 @@
     left: 8px;
     right: 8px;
     display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
     z-index: 40;

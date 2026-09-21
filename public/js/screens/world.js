@@ -31,7 +31,7 @@ function buildWorld() {
             const plaque = document.createElement("div");
             plaque.className = "plaque" + (b.gym ? " gym" : "");
             plaque.style.left = (cx / WORLD_W) * 100 + "%";
-            plaque.style.top = Math.max(2, (topY - 4) / WORLD_H * 100) + "%";
+            plaque.style.top = `max(24px, ${(topY - 4) / WORLD_H * 100}%)`;
             plaque.innerHTML = `${b.icon} ${b.label}<div class="arrow"></div>`;
             worldEl.appendChild(plaque);
 

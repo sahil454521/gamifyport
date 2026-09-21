@@ -5,6 +5,7 @@
 // ========================================
 
 let battleState = null;
+let battleMsgInterval = null;
 
 // ========================================
 // BASE POKÉMON DATA
@@ -873,14 +874,17 @@ function showBattleMessage(text) {
     const msg = document.getElementById("battle-msg");
     if (!msg) return;
 
+    if (battleMsgInterval) clearInterval(battleMsgInterval);
+
     msg.textContent = "";
     let i = 0;
-    const interval = setInterval(() => {
+    battleMsgInterval = setInterval(() => {
         if (i < text.length) {
             msg.textContent += text[i];
             i++;
         } else {
-            clearInterval(interval);
+            clearInterval(battleMsgInterval);
+            battleMsgInterval = null;
         }
     }, 18);
 }
