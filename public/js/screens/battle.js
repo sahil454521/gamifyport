@@ -334,7 +334,9 @@ function buildBattleHTML() {
 
         <!-- GBA Textbox -->
         <div id="battle-textbox">
-            <div id="battle-msg">A wild battle is about to begin!</div>
+            <div id="battle-msg-box">
+                <div id="battle-msg">A wild battle is about to begin!</div>
+            </div>
             <div id="battle-actions"></div>
         </div>
     `;
@@ -463,9 +465,11 @@ function showMoveSelection() {
         html += `
             <button class="move-btn ${mcClass}" data-type="${move.type}"
                 onclick="selectMove(${i})" ${disabled}>
-                ${move.name}
+                <span class="move-name-row">
+                    <span class="move-name">${move.name}</span>
+                    <span class="move-pp">PP ${move.pp}/${move.maxPP}</span>
+                </span>
                 <span class="move-type">${move.type.toUpperCase()} • PWR ${move.power}</span>
-                <span class="move-pp">PP ${move.pp}/${move.maxPP}</span>
             </button>
         `;
     });
