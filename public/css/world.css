@@ -150,9 +150,9 @@
     left: 8px;
     right: 8px;
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
+    gap: 10px;
     z-index: 40;
     pointer-events: none;
 }
@@ -171,7 +171,7 @@
 
 #hint-banner {
     position: absolute;
-    top: 8px;
+    top: 58px;
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-body);

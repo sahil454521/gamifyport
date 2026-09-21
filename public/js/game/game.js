@@ -78,7 +78,7 @@ const BUILDINGS = [
 // ========================================
 
 const OBSTACLES = [
-    { x: 296, y: 0, w: 172, h: 96 },   // lake
+    { x: 374, y: 0, w: 163, h: 84 },   // lake
     { x: 0, y: 150, w: 113, h: 190 },  // SW mountain
     { x: 452, y: 0, w: 112, h: 54 },   // NE mountain 1
     { x: 706, y: 0, w: 74, h: 44 }     // NE mountain 2
