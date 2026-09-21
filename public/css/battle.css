@@ -412,6 +412,28 @@
     color: #888;
 }
 
+/* Main action menu (FIGHT / BAG / POKÉMON / RUN) */
+.action-btn {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    color: #fff;
+    border: 2px solid #383838;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.35);
+    padding: 12px 10px;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.12s;
+}
+
+.action-btn:hover { filter: brightness(1.12); }
+.action-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(0,0,0,0.35); }
+
+.action-fight { background: #e0474a; }
+.action-bag { background: #4890c8; }
+.action-pokemon { background: #58a850; }
+.action-run { background: #e0ab24; }
+
 /* Special MC Moves */
 .move-btn.mc-move {
     background: linear-gradient(135deg, #fff9d6, #ffe875);

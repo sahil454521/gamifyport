@@ -394,8 +394,56 @@ function playIntro() {
     // Start battle
     setTimeout(() => {
         battleState.turn = "player";
-        showMoveSelection();
+        showMainAction();
     }, 4200);
+}
+
+// ========================================
+// MAIN ACTION MENU (FIGHT / BAG / POKÉMON / RUN)
+// ========================================
+
+function showMainAction() {
+    const actions = document.getElementById("battle-actions");
+    if (!actions) return;
+
+    actions.innerHTML = `
+        <button class="action-btn action-fight" onclick="handleMainAction('fight')">FIGHT</button>
+        <button class="action-btn action-bag" onclick="handleMainAction('bag')">BAG</button>
+        <button class="action-btn action-pokemon" onclick="handleMainAction('pokemon')">POKÉMON</button>
+        <button class="action-btn action-run" onclick="handleMainAction('run')">RUN</button>
+    `;
+
+    if (battleState.mcPowerTriggered) {
+        showBattleMessage("⚡ MAIN CHARACTER POWER READY! What will ASH-GRENINJA do?");
+    } else {
+        showBattleMessage("What will ASH-GRENINJA do?");
+    }
+}
+
+function handleMainAction(action) {
+    if (!battleState || battleState.turn !== "player" || battleState.animating) return;
+
+    if (action === "fight") {
+        showMoveSelection();
+        return;
+    }
+
+    if (action === "run") {
+        showBattleMessage("Got away safely!");
+        setTimeout(closeBattle, 900);
+        return;
+    }
+
+    const actions = document.getElementById("battle-actions");
+    if (actions) actions.innerHTML = "";
+
+    if (action === "bag") {
+        showBattleMessage("SAHIL checked the BAG... but there's nothing to use here!");
+    } else if (action === "pokemon") {
+        showBattleMessage("ASH-GRENINJA is your only partner — no one else to send out!");
+    }
+
+    setTimeout(showMainAction, 1400);
 }
 
 // ========================================
@@ -422,14 +470,14 @@ function showMoveSelection() {
         `;
     });
 
-    html += `<button class="battle-run-btn" onclick="closeBattle()">🏃 RUN AWAY</button>`;
+    html += `<button class="battle-run-btn" onclick="showMainAction()">↩ BACK</button>`;
 
     actions.innerHTML = html;
 
     if (battleState.mcPowerTriggered) {
-        showBattleMessage("⚡ MAIN CHARACTER POWER READY! Choose an ultimate move!");
+        showBattleMessage("⚡ Choose an ultimate move!");
     } else {
-        showBattleMessage("What will ASH-GRENINJA do?");
+        showBattleMessage("Which move should ASH-GRENINJA use?");
     }
 }
 
@@ -557,7 +605,7 @@ function executeEnemyAttack() {
                 setTimeout(() => {
                     battleState.turn = "player";
                     battleState.animating = false;
-                    showMoveSelection();
+                    showMainAction();
                 }, 1100);
             }, 700);
 
@@ -610,7 +658,7 @@ function executeEnemyAttack() {
                 } else {
                     battleState.turn = "player";
                     battleState.animating = false;
-                    showMoveSelection();
+                    showMainAction();
                 }
             }, 1000);
 
@@ -702,7 +750,7 @@ function triggerMCPower() {
                     setTimeout(() => {
                         battleState.turn = "player";
                         battleState.animating = false;
-                        showMoveSelection();
+                        showMainAction();
                     }, 2200);
                 }, 2200);
             }, 2200);
